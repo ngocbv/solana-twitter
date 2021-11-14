@@ -1,15 +1,16 @@
-import { Tweet } from '@/models'
 import bs58 from 'bs58'
+import { useWorkspace } from "../useWorkspace"
 
-export const fetchTweets = async ({ program }, filters = []) => {
-    const tweets = await program.value.account.tweet.all(filters);
-    return tweets.map(tweet => new Tweet(tweet.publicKey, tweet.account))
+export default async (filters = []) => {
+    const { program } = useWorkspace()
+
+    return await program.account.tweet.all(filters);
 }
 
-export const authorFilter = authorBase58PublicKey => ({
+export const authorFilter = author => ({
     memcmp: {
         offset: 8, // Discriminator.
-        bytes: authorBase58PublicKey,
+        bytes: bs58.encode(Buffer.from(author)),
     }
 })
 
@@ -17,8 +18,7 @@ export const topicFilter = topic => ({
     memcmp: {
         offset: 8 + // Discriminator.
             32 + // Author public key.
-            8 + // Timestamp.
-            4, // Topic string prefix.
+            4, // Topic string length.
         bytes: bs58.encode(Buffer.from(topic)),
     }
 })
