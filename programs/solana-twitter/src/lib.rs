@@ -1,5 +1,4 @@
 use anchor_lang::prelude::*;
-use anchor_lang::prelude::*;
 use anchor_lang::solana_program::system_program;
 
 declare_id!("BsWfCtugVqewDAKuFjQBvmnWwXUA2m2n8K3wrJK2NiCq");
